@@ -133,7 +133,7 @@ void taskCanRecv()
         Serial.println("\r\n------------------------------------------------------------------");
         Serial.print("Get Data From id: 0x");
         Serial.println(id, HEX);
-        for(int i = 0; i<len; i++)          // print the data
+        for(int i = 0; i<8; i++)          // print the data
         {
             Serial.print("0x");
             Serial.print(buf[i], HEX);
