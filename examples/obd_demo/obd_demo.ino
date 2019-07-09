@@ -2,6 +2,8 @@
   OBD-II_PIDs TEST CODE
   Joney @ Dec 2017
   
+  Modify @ 2019-7-9, add ext frame
+  
   Query
   send id: 0x7df
       dta: 0x02, 0x01, PID_CODE, 0, 0, 0, 0, 0
@@ -20,6 +22,8 @@
 // v0.9b and v1.0 is default D10
 Serial_CAN can;
 
+#define STANDARD_CAN_11BIT      1       // That depands on your car. some 1 some 0. 
+
 #define can_tx  2           // tx of serial can module connect to D2
 #define can_rx  3           // rx of serial can module connect to D3
 
@@ -27,11 +31,16 @@ Serial_CAN can;
 #define PID_VEHICLE_SPEED   0x0D
 #define PID_COOLANT_TEMP    0x05
 
+#if STANDARD_CAN_11BIT
 #define CAN_ID_PID          0x7DF
+#else
+#define CAN_ID_PID          0x18db33f1
+#endif
 
 unsigned char PID_INPUT;
 unsigned char getPid    = 0;
 
+#if STANDARD_CAN_11BIT
 unsigned long mask[4] = 
 {
     0, 0x7FC,                // ext, maks 0
@@ -48,12 +57,30 @@ unsigned long filt[12] =
     0, 0x7E8,                // ext, filt 5
 };
 
+#else
+unsigned long mask[4] =
+{
+    1, 0x1fffffff,               // ext, maks 0
+    1, 0x1fffffff,
+};
+ 
+unsigned long filt[12] =
+{
+    1, 0x18DAF110,                // ext, filt
+    1, 0x18DAF110,                // ext, filt 1
+    1, 0x18DAF110,                // ext, filt 2
+    1, 0x18DAF110,                // ext, filt 3
+    1, 0x18DAF110,                // ext, filt 4
+    1, 0x18DAF110,                // ext, filt 5
+};
+#endif
+
 void set_mask_filt()
 {
     /*
      * set mask, set both the mask to 0x3ff
      */
-     
+
     if(can.setMask(mask))
     {
         Serial.println("set mask ok");
@@ -82,8 +109,12 @@ void sendPid(unsigned char __pid)
     unsigned char tmp[8] = {0x02, 0x01, __pid, 0, 0, 0, 0, 0};
     Serial.print("SEND PID: 0x");
     Serial.println(__pid, HEX);
-    
+
+#if STANDARD_CAN_11BIT
     can.send(CAN_ID_PID, 0, 0, 8, tmp);   // SEND TO ID:0X55
+#else
+    can.send(CAN_ID_PID, 1, 0, 8, tmp);   // SEND TO ID:0X55
+#endif
 
 }
 
@@ -133,7 +164,7 @@ void taskCanRecv()
         Serial.println("\r\n------------------------------------------------------------------");
         Serial.print("Get Data From id: 0x");
         Serial.println(id, HEX);
-        for(int i = 0; i<8; i++)          // print the data
+        for(int i = 0; i<len; i++)          // print the data
         {
             Serial.print("0x");
             Serial.print(buf[i], HEX);
