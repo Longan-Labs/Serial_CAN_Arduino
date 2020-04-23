@@ -18,8 +18,6 @@
 #include <Serial_CAN_Module.h>
 #include <SoftwareSerial.h>
 
-// the cs pin of the version after v1.1 is default to D9
-// v0.9b and v1.0 is default D10
 Serial_CAN can;
 
 #define STANDARD_CAN_11BIT      1       // That depands on your car. some 1 some 0. 
