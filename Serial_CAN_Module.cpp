@@ -169,7 +169,7 @@ unsigned char Serial_CAN::enterSettingMode()
 unsigned char Serial_CAN::exitSettingMode()
 {
     clear();
-    int ret = cmdOk("AT+Q\r\n");
+    int ret = cmdOk((char*)"AT+Q\r\n");
     clear();
     return ret;
 }
