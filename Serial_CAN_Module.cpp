@@ -134,12 +134,40 @@ unsigned char Serial_CAN::canRate(unsigned char rate)
 value	        0	    1	    2	    3   	4
 baud rate(b/s)	9600	19200	38400	57600	115200
 */
+
 unsigned char Serial_CAN::baudRate(unsigned char rate)
 {
-    enterSettingMode();
+    unsigned long baud[5] = {9600, 19200, 38400, 57600, 115200};
+    int baudNow = 0;
+    
+    for(int i=0; i<5; i++)
+    {
+        canSerial->begin(baud[i]);
+        canSerial->print("+++");
+        delay(100);
+        
+        if(cmdOk("AT\r\n"))
+        {
+            Serial.print("SERIAL BAUD RATE IS: ");
+            Serial.println(baud[i]);
+            baudNow = i;
+            break;     
+        }
+    }
     
     sprintf(str_tmp, "AT+S=%d\r\n", rate);
-    int ret = cmdOk(str_tmp);
+    cmdOk(str_tmp);
+    
+    canSerial->begin(baud[rate]);
+    
+    int ret = cmdOk("AT\r\n");
+    
+    if(ret)
+    {
+        Serial.print("Serial baudrate set to ");
+        Serial.println(baud[rate]);
+    }
+    
     exitSettingMode();
     return ret;
 }

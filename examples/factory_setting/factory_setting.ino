@@ -17,9 +17,12 @@ Serial_CAN can;
 void setup()
 {
     Serial.begin(9600);
-    can.begin(can_tx, can_rx, 9600);      // tx, rx
+    while(!Serial);
     
     Serial.println("BEGIN FACTORY SETTING...");
+    
+    can.begin(can_tx, can_rx, 9600);      // tx, rx
+
     if(can.factorySetting())
     {
         Serial.println("\r\nFACTORY SETTING OK");
@@ -28,13 +31,13 @@ void setup()
     {
         Serial.println("\r\nFACTORY SETTING FAIL");
     }
-    
+
     // now you can replug your serial can bus module see if factory setting correctly. 
 }
 
 void loop()
 {
-    can.debugMode();
+    //can.debugMode();
 }
 
 // END FILE

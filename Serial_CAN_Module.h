@@ -24,6 +24,12 @@
 #define CAN_RATE_666    17
 #define CAN_RATE_1000   18
 
+#define SERIAL_RATE_9600    0
+#define SERIAL_RATE_19200   1
+#define SERIAL_RATE_38400   2
+#define SERIAL_RATE_57600   3
+#define SERIAL_RATE_115200  4
+
 class Serial_CAN
 {
 private:

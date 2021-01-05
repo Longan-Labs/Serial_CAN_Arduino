@@ -27,6 +27,7 @@ unsigned long filt[12] =
 void setup()
 {
     Serial.begin(9600);
+    while(!Serial);
     can.begin(can_tx, can_rx, 9600);      // tx, rx
 
     if(can.setFilt(filt))
