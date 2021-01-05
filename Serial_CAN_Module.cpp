@@ -224,6 +224,7 @@ unsigned char Serial_CAN::setMask(unsigned long *dta)
             return 0;
         }
         clear();
+        delay(10);
         //
     }
     exitSettingMode();
@@ -262,6 +263,7 @@ unsigned char Serial_CAN::setFilt(unsigned long *dta)
             return 0;
         }
         clear();
+        delay(10);
         //
     }
     exitSettingMode();
