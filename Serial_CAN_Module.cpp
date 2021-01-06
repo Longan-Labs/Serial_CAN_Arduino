@@ -51,11 +51,14 @@ unsigned char Serial_CAN::recv(unsigned long *id, uchar *buf)
             while(canSerial->available())
             {
                 dta[len++] = canSerial->read();
-		if(len == 12)
+                if(len == 12)
                     break;
-                timer_s = millis();
+ 
             	if((millis()-timer_s) > 10)
+                {
+                    canSerial->flush();
                     return 0; // Reading 12 bytes should be faster than 10ms, abort if it takes longer, we loose the partial message in this case
+                }
             }
             
             if(len == 12) // Just to be sure, must be 12 here
@@ -76,6 +79,13 @@ unsigned char Serial_CAN::recv(unsigned long *id, uchar *buf)
                 }
                 return 1;
             }
+            
+            if((millis()-timer_s) > 10)
+            {
+                canSerial->flush();
+                return 0; // Reading 12 bytes should be faster than 10ms, abort if it takes longer, we loose the partial message in this case
+            }
+            
         }
     }
     
