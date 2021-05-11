@@ -1,4 +1,4 @@
-# Longan Labs CAN Bus Library 
+# Longan Labs Serial CAN Bus Module Library
 
 [![Actions Status](https://github.com/arduino/arduino-cli-example/workflows/test/badge.svg)](https://github.com/arduino/arduino-cli-example/actions)
 [![Spell Check](https://github.com/arduino/compile-sketches/workflows/Spell%20Check/badge.svg)](https://github.com/arduino/compile-sketches/actions?workflow=Spell+Check)
