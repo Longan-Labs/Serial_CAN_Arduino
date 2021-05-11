@@ -1,0 +1,46 @@
+#######################################
+# Syntax Coloring Map For Serial CAN Bus Module
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+Serial_CAN	KEYWORD1
+Serial_CAN_Module	KEYWORD1
+CAN	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+begin	KEYWORD2
+send	KEYWORD2
+recv	KEYWORD2
+canRate	KEYWORD2
+baudRate	KEYWORD2
+setMask	KEYWORD2
+setFilt	KEYWORD2
+factorySetting	KEYWORD2
+debugMode   KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+CAN_5KBPS	LITERAL1
+CAN_RATE_5  LITERAL1
+CAN_RATE_10 LITERAL1
+CAN_RATE_20 LITERAL1
+CAN_RATE_25 LITERAL1
+CAN_RATE_31_2   LITERAL1
+CAN_RATE_33 LITERAL1
+CAN_RATE_40 LITERAL1
+CAN_RATE_50 LITERAL1
+CAN_RATE_80 LITERAL1
+CAN_RATE_83_3   LITERAL1
+CAN_RATE_95 LITERAL1
+CAN_RATE_100    LITERAL1
+CAN_RATE_125    LITERAL1
+CAN_RATE_200    LITERAL1
+CAN_RATE_250    LITERAL1
+CAN_RATE_500    LITERAL1
+CAN_RATE_666    LITERAL1
+CAN_RATE_1000   LITERAL1
