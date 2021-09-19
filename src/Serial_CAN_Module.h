@@ -30,6 +30,10 @@
 #define SERIAL_RATE_57600   3
 #define SERIAL_RATE_115200  4
 
+class Stream;
+class SoftwareSerial;
+class HardwareSerial;
+
 class Serial_CAN
 {
 private:
@@ -37,10 +41,17 @@ private:
     unsigned char enterSettingMode();
     unsigned char exitSettingMode();
     void clear();
+    void selfBaudRate(unsigned long baud);
     char str_tmp[100];
+    SoftwareSerial *softwareSerial = NULL;
+    HardwareSerial *hardwareSerial = NULL;
+    Stream *canSerial = NULL;
+
 public:
     
     void begin(int can_tx, int can_rx, unsigned long baud);
+    void begin(SoftwareSerial &serial, unsigned long baud);
+    void begin(HardwareSerial &serial, unsigned long baud);
     unsigned char send(unsigned long id, uchar ext, uchar rtrBit, uchar len, const uchar *buf);
     unsigned char recv(unsigned long *id, uchar *buf);
     

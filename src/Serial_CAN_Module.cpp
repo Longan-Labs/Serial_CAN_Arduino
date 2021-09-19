@@ -2,13 +2,27 @@
 
 #include <Serial_CAN_Module.h>
 #include <SoftwareSerial.h>
-
-SoftwareSerial *canSerial = NULL;
+#include <HardwareSerial.h>
 
 void Serial_CAN::begin(int can_tx, int can_rx, unsigned long baud)
 {
-    canSerial = new SoftwareSerial(can_tx, can_rx);
-    canSerial->begin(baud);
+    softwareSerial = new SoftwareSerial(can_tx, can_rx);
+    softwareSerial->begin(baud);
+    canSerial = softwareSerial;
+}
+
+void Serial_CAN::begin(SoftwareSerial &serial, unsigned long baud)
+{
+    serial.begin(baud);
+    softwareSerial = &serial;
+    canSerial = &serial;
+}
+
+void Serial_CAN::begin(HardwareSerial &serial, unsigned long baud)
+{
+    serial.begin(baud);
+    hardwareSerial = &serial;
+    canSerial = &serial;
 }
 
 unsigned char Serial_CAN::send(unsigned long id, uchar ext, uchar rtrBit, uchar len, const uchar *buf)
@@ -152,7 +166,7 @@ unsigned char Serial_CAN::baudRate(unsigned char rate)
     
     for(int i=0; i<5; i++)
     {
-        canSerial->begin(baud[i]);
+        selfBaudRate(baud[i]);
         canSerial->print("+++");
         delay(100);
         
@@ -168,7 +182,7 @@ unsigned char Serial_CAN::baudRate(unsigned char rate)
     sprintf(str_tmp, "AT+S=%d\r\n", rate);
     cmdOk(str_tmp);
     
-    canSerial->begin(baud[rate]);
+    selfBaudRate(baud[rate]);
     
     int ret = cmdOk("AT\r\n");
     
@@ -182,6 +196,17 @@ unsigned char Serial_CAN::baudRate(unsigned char rate)
     return ret;
 }
 
+void Serial_CAN::selfBaudRate(unsigned long baud)
+{
+    if(softwareSerial)
+    {
+        softwareSerial->begin(baud);
+    }
+    else if(hardwareSerial)
+    {
+        hardwareSerial->begin(baud);
+    }
+}
 
 void Serial_CAN::clear()
 {
@@ -319,7 +344,7 @@ unsigned char Serial_CAN::factorySetting()
     
     for(int i=0; i<5; i++)
     {
-        canSerial->begin(baud[i]);
+        selfBaudRate(baud[i]);
         canSerial->print("+++");
         delay(100);
         
@@ -329,7 +354,7 @@ unsigned char Serial_CAN::factorySetting()
             Serial.println(baud[i]);
             baudRate(0);                // set serial baudrate to 9600
             Serial.println("SET SERIAL BAUD RATE TO: 9600 OK");
-            canSerial->begin(9600);
+            selfBaudRate(9600);
             break;            
         }
     }
