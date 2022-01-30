@@ -15,7 +15,7 @@ void setup()
     Serial.begin(9600);
     while(!Serial);
     Serial.println("START to set the serial baud rate...");
-    can.begin(can_tx, can_rx, 57600);      // tx, rx
+    can.begin(can_tx, can_rx, 9600);      // tx, rx
 
     if(can.baudRate(SERIAL_RATE_57600))
     {
