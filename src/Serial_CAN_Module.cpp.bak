@@ -156,12 +156,12 @@ unsigned char Serial_CAN::canRate(unsigned char rate)
 
 /*
 value	        0	    1	    2	    3   	4
-baud rate(b/s)	9600	19200	38400	/	115200
+baud rate(b/s)	9600	19200	38400	57600	115200
 */
 
 unsigned char Serial_CAN::baudRate(unsigned char rate)
 {
-    unsigned long baud[5] = {9600, 19200, 38400, 9600, 115200};
+    unsigned long baud[5] = {9600, 19200, 38400, 57600, 115200};
     int baudNow = 0;
     
     if(rate == 3)return 0;

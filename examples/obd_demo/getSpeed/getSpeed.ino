@@ -20,8 +20,8 @@
 
 Serial_CAN can;
 
-#define can_tx  2           // tx of serial can module connect to D2
-#define can_rx  3           // rx of serial can module connect to D3
+#define can_tx  2       // tx of serial can module, the yellow cable
+#define can_rx  3       // rx of serial can module, the white cable
 
 #define PID_ENGIN_PRM       0x0C
 #define PID_VEHICLE_SPEED   0x0D
@@ -33,68 +33,6 @@ Serial_CAN can;
 #define CAN_ID_PID          0x18db33f1
 #endif
 
-#if STANDARD_CAN_11BIT
-unsigned long mask[4] = 
-{
-    0, 0x7FC,                // ext, maks 0
-    0, 0x7FC,                // ext, mask 1
-};
-
-unsigned long filt[12] = 
-{
-    0, 0x7E8,                // ext, filt 0
-    0, 0x7E8,                // ext, filt 1
-    0, 0x7E8,                // ext, filt 2
-    0, 0x7E8,                // ext, filt 3
-    0, 0x7E8,                // ext, filt 4
-    0, 0x7E8,                // ext, filt 5
-};
-
-#else
-unsigned long mask[4] =
-{
-    1, 0x1fffffff,               // ext, maks 0
-    1, 0x1fffffff,
-};
- 
-unsigned long filt[12] =
-{
-    1, 0x18DAF110,                // ext, filt
-    1, 0x18DAF110,                // ext, filt 1
-    1, 0x18DAF110,                // ext, filt 2
-    1, 0x18DAF110,                // ext, filt 3
-    1, 0x18DAF110,                // ext, filt 4
-    1, 0x18DAF110,                // ext, filt 5
-};
-#endif
-
-void set_mask_filt()
-{
-    /*
-     * set mask, set both the mask to 0x3ff
-     */
-
-    if(can.setMask(mask))
-    {
-        Serial.println("set mask ok");
-    }
-    else
-    {
-        Serial.println("set mask fail");
-    }
-    
-    /*
-     * set filter, we can receive id from 0x04 ~ 0x09
-     */
-    if(can.setFilt(filt))
-    {
-        Serial.println("set filt ok");
-    }
-    else 
-    {
-        Serial.println("set filt fail");
-    }
-}
 
 void sendPid(unsigned char __pid) {
     unsigned char tmp[8] = {0x02, 0x01, __pid, 0, 0, 0, 0, 0};
@@ -131,22 +69,8 @@ bool getSpeed(int *s)
 
 void setup() {
     Serial.begin(115200);
-    while(!Serial);
-    
-    can.begin(can_tx, can_rx, 9600);      // tx, rx
-    
-    // set baudrate of CAN Bus to 500Kb/s
-    if(can.canRate(CAN_RATE_500))
-    {
-        Serial.println("set can rate ok");
-    }
-    else
-    {
-        Serial.println("set can rate fail");
-    }
-    
-    set_mask_filt();
-    
+    while(!Serial);   
+    can.begin(can_tx, can_rx, 38400);
     Serial.println("begin");
 }
 

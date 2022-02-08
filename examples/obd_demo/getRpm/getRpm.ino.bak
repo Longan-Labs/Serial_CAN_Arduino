@@ -33,68 +33,6 @@ Serial_CAN can;
 #define CAN_ID_PID          0x18db33f1
 #endif
 
-#if STANDARD_CAN_11BIT
-unsigned long mask[4] = 
-{
-    0, 0x7FC,                // ext, maks 0
-    0, 0x7FC,                // ext, mask 1
-};
-
-unsigned long filt[12] = 
-{
-    0, 0x7E8,                // ext, filt 0
-    0, 0x7E8,                // ext, filt 1
-    0, 0x7E8,                // ext, filt 2
-    0, 0x7E8,                // ext, filt 3
-    0, 0x7E8,                // ext, filt 4
-    0, 0x7E8,                // ext, filt 5
-};
-
-#else
-unsigned long mask[4] =
-{
-    1, 0x1fffffff,               // ext, maks 0
-    1, 0x1fffffff,
-};
- 
-unsigned long filt[12] =
-{
-    1, 0x18DAF110,                // ext, filt
-    1, 0x18DAF110,                // ext, filt 1
-    1, 0x18DAF110,                // ext, filt 2
-    1, 0x18DAF110,                // ext, filt 3
-    1, 0x18DAF110,                // ext, filt 4
-    1, 0x18DAF110,                // ext, filt 5
-};
-#endif
-
-void set_mask_filt()
-{
-    /*
-     * set mask, set both the mask to 0x3ff
-     */
-
-    if(can.setMask(mask))
-    {
-        Serial.println("set mask ok");
-    }
-    else
-    {
-        Serial.println("set mask fail");
-    }
-    
-    /*
-     * set filter, we can receive id from 0x04 ~ 0x09
-     */
-    if(can.setFilt(filt))
-    {
-        Serial.println("set filt ok");
-    }
-    else 
-    {
-        Serial.println("set filt fail");
-    }
-}
 
 void sendPid(unsigned char __pid) {
     unsigned char tmp[8] = {0x02, 0x01, __pid, 0, 0, 0, 0, 0};
@@ -134,19 +72,6 @@ void setup() {
     while(!Serial);
     
     can.begin(can_tx, can_rx, 9600);      // tx, rx
-    
-    // set baudrate of CAN Bus to 500Kb/s
-    if(can.canRate(CAN_RATE_500))
-    {
-        Serial.println("set can rate ok");
-    }
-    else
-    {
-        Serial.println("set can rate fail");
-    }
-    
-    set_mask_filt();
-    
     Serial.println("begin");
 }
 
@@ -156,9 +81,9 @@ void loop() {
     int ret = getRPM(&__rpm);
     if(ret)
     {
-        Serial.print("Vehicle Speed: ");
-        Serial.print(__speed);
-        Serial.println(" kmh");
+        Serial.print("Engin Speed: ");
+        Serial.print(__rpm);
+        Serial.println(" rpm");
     }
     delay(500);
 }
